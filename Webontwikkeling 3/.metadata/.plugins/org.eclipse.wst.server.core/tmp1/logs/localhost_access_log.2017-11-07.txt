@@ -1,0 +1,16 @@
+127.0.0.1 - - [07/Nov/2017:13:05:14 +0100] "GET / HTTP/1.1" 404 1070
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:16 +0100] "GET /Labo_1/ HTTP/1.1" 200 1173
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:16 +0100] "GET /Labo_1/css/style.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:17 +0100] "GET /Labo_1/images/banner.png HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:17 +0100] "GET /favicon.ico HTTP/1.1" 404 1081
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:49 +0100] "GET /Labo_1/Controller?action=productOverview HTTP/1.1" 200 1111
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:05:56 +0100] "GET /Labo_1/Controller?action=overview HTTP/1.1" 200 863
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:18 +0100] "GET /Labo_1/Controller?action=productOverview HTTP/1.1" 200 1113
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:21 +0100] "GET /Labo_1/Controller?action=overview HTTP/1.1" 200 1062
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:29 +0100] "GET /Labo_1/Controller?action=signUp HTTP/1.1" 200 1612
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:48 +0100] "POST /Labo_1/Controller?action=voegToe HTTP/1.1" 200 1173
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:50 +0100] "GET /Labo_1/Controller?action=overview HTTP/1.1" 200 1259
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:10:59 +0100] "GET /Labo_1/Controller?action=removePerson&id=22525 HTTP/1.1" 500 1936
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:11:07 +0100] "GET /Labo_1/Controller?action=productOverview HTTP/1.1" 200 1113
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:11:09 +0100] "GET /Labo_1/Controller?action=addProduct HTTP/1.1" 200 1642
+0:0:0:0:0:0:0:1 - - [07/Nov/2017:13:11:23 +0100] "POST /Labo_1/Controller?action=addProductToDB HTTP/1.1" 200 1332

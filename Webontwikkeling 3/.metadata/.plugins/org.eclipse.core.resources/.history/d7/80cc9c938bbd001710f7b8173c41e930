@@ -1,0 +1,113 @@
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import domain.Person;
+import domain.Product;
+
+public class ProductSQLDatabase {
+	
+	String url = "jdbc:postgresql://gegevensbanken.khleuven.be:51617/1TX37?currentSchema=r0613805_test";
+	Properties properties = new Properties();
+	
+	public ProductSQLDatabase() {
+		properties.setProperty("user", "r0613805");
+		properties.setProperty("password", "Mvdh123456");
+		properties.setProperty("ssl", "true");
+		properties.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
+		
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch(ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+			throw new DbException();
+		}
+	}
+	
+	public ArrayList<Product> getAll(){
+		ArrayList<Product> list = new ArrayList<Product>();
+		
+		try(Connection connection = DriverManager.getConnection(url, properties)){
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM r0613805_test.product");
+			
+			while(result.next()) {
+				String productid = result.getString("product_id");
+				String name = result.getString("name");
+				String description = result.getString("description");
+				String price = result.getString("price");
+				String rating = result.getString("rating");
+				int ratingInt;
+				if (rating == null) {
+					ratingInt = 0;
+				} else {
+					ratingInt = Integer.parseInt(rating);
+				}
+				
+				Product product = new Product(Integer.parseInt(productid), name, description, Double.parseDouble(price), ratingInt);
+				list.add(product);			}
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		return list;
+	}
+	
+	public void add(Product product) {
+		try(Connection connection = DriverManager.getConnection(url, properties))	{
+			Statement statement = connection.createStatement()	;
+			statement.executeQuery("INSERT INTO r0613805_test.product (product_id, name, description, price, rating)"
+					+ "VALUES ('"+product.getProductId()+ "," + product.getName()+ "," + product.getDescription() + "," + product.getPrice() + "," + product.getRating() +"')");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Product get(String id) {
+		Product product1 = null;
+		
+		try(Connection connection = DriverManager.getConnection(url, properties)){
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM r0613805_test.product WHERE product_id=" + id);
+			
+			while(result.next()) {
+				String productid = result.getString("product_id");
+				String name = result.getString("name");
+				String description = result.getString("description");
+				String price = result.getString("price");
+				String rating = result.getString("rating");
+				int ratingInt;
+				if (rating == null) {
+					ratingInt = 0;
+				} else {
+					ratingInt = Integer.parseInt(rating);
+				}
+				
+				product1 = new Product(Integer.parseInt(productid), name, description, Double.parseDouble(price), ratingInt);
+			}
+			
+			return product1;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+	}
+	public void update(Product product) {
+		try(Connection connection = DriverManager.getConnection(url, properties)){
+			Statement statement = connection.createStatement();
+			statement.executeQuery("UPDATE r0613805_test.product SET (product_id, name, description, price, rating) VALUES ('"+product.getProductId()+ "," + product.getName()+ "," + product.getDescription() + "," + product.getPrice() + "," + product.getRating() +"')");
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());			}
+	}
+	
+	public void delete(int id) {
+		
+	}
+}

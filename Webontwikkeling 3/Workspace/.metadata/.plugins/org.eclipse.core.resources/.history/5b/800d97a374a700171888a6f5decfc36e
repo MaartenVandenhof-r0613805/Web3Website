@@ -1,0 +1,181 @@
+package controller;
+
+import java.awt.List;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.gargoylesoftware.htmlunit.javascript.host.fetch.Request;
+
+import db.DbException;
+import db.PersonDbInMemory;
+import domain.DomainException;
+import domain.Person;
+import domain.ShopService;
+import net.sourceforge.htmlunit.corejs.javascript.ast.IdeErrorReporter;
+
+/**
+ * Servlet implementation class Controller
+ */
+@WebServlet("/Controller")
+public class Controller extends HttpServlet {
+	private ShopService databank = new ShopService();
+	
+	private static final long serialVersionUID = 1L;
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Controller() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		frontController(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+	
+	protected void frontController(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String doel;
+		String action;
+		if (request.getParameter("action") == null || request.getParameter("action").isEmpty()) {
+			action = "index";
+		} else {
+			action = request.getParameter("action");
+		}
+		
+		switch(action) {
+		case "overview":
+			doel = Overview(request, response);
+			break;
+		case "index":
+			doel = "index.jsp";
+			break;
+		case "signUp":
+			doel = "signUp.jsp";
+			break;
+		case "voegToe":
+			doel = voegToe(request, response);
+			break;
+		case "update":
+			doel = update(request, response);
+			break;
+		default:
+			doel = "index.jsp";
+		}
+		
+		RequestDispatcher rd = request.getRequestDispatcher(doel);
+		rd.forward(request, response);
+	}
+
+	private String Overview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("Databank", this.databank.getPersons());
+		return "personoverview.jsp";
+	}
+	
+	private String voegToe(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 ArrayList<String> errorLijst = new ArrayList<String>();
+		
+		
+		Person persoon = new Person();
+		
+		
+		setId(persoon, request, errorLijst);
+		setFirstName(persoon, request, errorLijst);
+		setLastName(persoon, request, errorLijst);
+		setEmail(persoon, request, errorLijst);
+		setPassword(persoon, request, errorLijst);
+		if (request.getRequestURI().contains("update")) {
+			this.databank.deletePerson(request.getParameter("id"));
+		}
+		addPerson(persoon, request, errorLijst);
+		
+		request.setAttribute("errors", errorLijst);
+		
+		if(errorLijst == null || errorLijst.isEmpty()) {
+			return "index.jsp";
+		} else {
+			return "signUp.jsp";
+		}
+		
+	}
+	
+	private void setId(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		String ID = request.getParameter("userid");
+		try {
+			persoon.setUserid(ID);
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private void setFirstName(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		String firstName = request.getParameter("firstName");
+		try {
+			persoon.setFirstName(firstName);;
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private void setLastName(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		String lastName = request.getParameter("lastName");
+		try {
+			persoon.setLastName(lastName);;
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private void setEmail(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		String email = request.getParameter("email");
+		try {
+			persoon.setEmail(email);;
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private void setPassword(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		String password = request.getParameter("password");
+		try {
+			persoon.setPassword(password);;
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private void addPerson(Person persoon, HttpServletRequest request, ArrayList<String> errorLijst){
+		
+		try {
+			this.databank.addPerson(persoon);
+		} catch(DbException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+	private String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id = request.getParameter("id");
+		Person persoon = databank.getPerson(id);
+		request.setAttribute("person", persoon);
+		return "update.jsp";
+	}
+	
+}

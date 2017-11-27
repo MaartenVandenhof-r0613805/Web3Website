@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;r0613805_VandenhofMaarten/WebContent/header.jspf&apos; to &apos;footer.jspf&apos;" description="Rename resource &apos;header.jspf&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="WebContent/header.jspf" name="footer.jspf" stamp="1511706460179" updateReferences="true"/>
+</session>

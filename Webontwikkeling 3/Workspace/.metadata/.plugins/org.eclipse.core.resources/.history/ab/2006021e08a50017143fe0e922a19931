@@ -1,0 +1,122 @@
+package controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.gargoylesoftware.htmlunit.javascript.host.fetch.Request;
+
+import db.PersonDbInMemory;
+import domain.DomainException;
+import domain.Person;
+import domain.ShopService;
+import net.sourceforge.htmlunit.corejs.javascript.ast.IdeErrorReporter;
+
+/**
+ * Servlet implementation class Controller
+ */
+@WebServlet("/Controller")
+public class Controller extends HttpServlet {
+	private ShopService databank = new ShopService();
+	private ArrayList<String> errorLijst = new ArrayList<String>();
+	private static final long serialVersionUID = 1L;
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Controller() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		frontController(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+	
+	protected void frontController(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String doel;
+		String action;
+		if (request.getParameter("action") == null || request.getParameter("action").isEmpty()) {
+			action = "index";
+		} else {
+			action = request.getParameter("action");
+		}
+		
+		switch(action) {
+		case "overview":
+			doel = Overview(request, response);
+			break;
+		case "index":
+			doel = "index.jsp";
+			break;
+		case "signUp":
+			doel = "signUp.jsp";
+			break;
+		case "voegToe":
+			doel = voegToe(request, response);
+			break;
+		default:
+			doel = "index.jsp";
+		}
+		
+		RequestDispatcher rd = request.getRequestDispatcher(doel);
+		rd.forward(request, response);
+	}
+
+	private String Overview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("Databank", this.databank.getPersons());
+		return "personoverview.jsp";
+	}
+	
+	private String voegToe(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id = (String)request.getParameter("userid");
+		String firstName = (String)request.getParameter("firstName");
+		String lastName = (String)request.getParameter("lastName");
+		String email = (String)request.getParameter("email");
+		String password = (String)request.getParameter("password");
+		
+		Person persoon = null;
+		System.out.println("id is: " + id);
+		setId(persoon, id, request);
+		
+		if (errorLijst == null || errorLijst.isEmpty()) {
+			errorLijst = null;
+			databank.addPerson(persoon);
+			return Overview(request, response);
+		} else {
+			request.setAttribute("errors", this.errorLijst);
+			return "signUp.jsp";
+		}
+		
+		
+	}
+	
+	private void setId(Person persoon, String id, HttpServletRequest request){
+		String ID = request.getParameter("userid");
+		try {
+			persoon.setUserid(ID);
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
+		}
+	}
+	
+
+	
+}

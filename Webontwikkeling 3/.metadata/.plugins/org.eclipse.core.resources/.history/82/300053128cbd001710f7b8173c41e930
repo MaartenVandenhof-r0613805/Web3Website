@@ -1,0 +1,115 @@
+package db;
+import domain.Person;
+
+import java.awt.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import javax.xml.bind.DataBindingException;
+
+
+public class PersonDbDatabase {
+
+		Properties properties = new Properties();
+		String url = "jdbc:postgresql://gegevensbanken.khleuven.be:51617/1TX37?currentSchema=r0613805_test";
+		
+		
+		public PersonDbDatabase() {
+			properties.setProperty("user", "r0613805");
+			properties.setProperty("password", "Mvdh123456");
+			properties.setProperty("ssl", "true");
+			properties.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
+			
+			try {
+				Class.forName("org.postgresql.Driver");
+			} catch(ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+				throw new DbException();
+			}
+		}
+		
+		
+		
+		public ArrayList<Person> getAll(){
+			ArrayList<Person> list = new ArrayList<Person>();
+			try(Connection connection = DriverManager.getConnection(url, properties);
+			Statement statement = connection.createStatement();) {
+				
+				System.out.println("in the method");
+				
+				ResultSet result = statement.executeQuery("SELECT * FROM person");
+				
+				while(result.next()) {
+					System.out.println("test2");
+					String id = result.getString("user_id");
+					String firstName = result.getString("firstName");
+					String lastName = result.getString("lastName");
+					String email = result.getString("email");
+					String password = result.getString("password");
+					
+					
+					
+					Person person = new Person(id, email, password, firstName, lastName);
+					list.add(person);
+				}
+				
+			} catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+			
+			return list;
+		}
+		
+		public void add(Person person) {
+			try (Connection connection = DriverManager.getConnection(url, properties);
+					
+			    Statement statement = connection.createStatement();) {
+				statement.execute("INSERT INTO person (user_id, firstName, lastName, email, password) VALUES ('"+person.getUserid() + "','" + person.getFirstName() + "','" +   person.getLastName() +"','"+person.getEmail() + "','" + person.getPassword() + "');");
+
+			} catch (SQLException e) {
+				throw new DbException(e.getMessage(), e);
+			}
+		}
+		
+		public void update(Person person) {
+			try(Connection connection = DriverManager.getConnection(url, properties)){
+				Statement statement = connection.createStatement();
+				statement.executeQuery("UPDATE person SET (user_id, firstName, lastName, email, password) VALUES ('"+ person.getUserid() + "," + person.getFirstName() + "," + person.getLastName() + "," + person.getEmail() + person.getPassword() + "')");
+			} catch (SQLException e) {
+				throw new DbException(e.getMessage());			}
+		}
+		
+		public Person get(String id) {
+			Person person = null;
+			
+			try(Connection connection = DriverManager.getConnection(url, properties)){
+				Statement statement = connection.createStatement();
+				ResultSet result = statement.executeQuery("SELECT * FROM person WHERE user_id=" + id);
+				
+				while(result.next()) {
+					String userid = result.getString("user_id");
+					String firstName = result.getString("fistname");
+					String lastName = result.getString("lastname");
+					String email = result.getString("email");
+					String password = result.getString("password");
+					
+					person = new Person(userid, firstName, lastName, email, password);
+				}
+				
+				return person;
+				
+			} catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+			
+		}
+		
+		
+	
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="com.gargoylesoftware.htmlunit.javascript.host.fetch.Request"/>
+<fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+<fullyQualifiedTypeName name="db.PersonDbInMemory"/>
+<fullyQualifiedTypeName name="domain.ShopService"/>
+<fullyQualifiedTypeName name="domain.Person"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="net.sourceforge.htmlunit.corejs.javascript.ast.IdeErrorReporter"/>
+<fullyQualifiedTypeName name="java.lang.IllegalAccessError"/>
+<fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
+<fullyQualifiedTypeName name="domain.DomainException"/>
+</qualifiedTypeNameHistroy>

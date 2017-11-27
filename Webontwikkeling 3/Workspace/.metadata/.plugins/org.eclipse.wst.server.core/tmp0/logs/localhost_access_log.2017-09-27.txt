@@ -1,0 +1,8 @@
+127.0.0.1 - - [27/Sep/2017:21:17:35 +0200] "GET / HTTP/1.1" 404 1070
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:37 +0200] "GET /Labo_1/ HTTP/1.1" 200 1032
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:37 +0200] "GET /Labo_1/css/style.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:37 +0200] "GET /Labo_1/images/banner.png HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:37 +0200] "GET /favicon.ico HTTP/1.1" 404 1081
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:39 +0200] "GET /Labo_1/Controller?action=overview HTTP/1.1" 200 733
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:43 +0200] "GET /Labo_1/Controller?action=signUp HTTP/1.1" 200 1547
+0:0:0:0:0:0:0:1 - - [27/Sep/2017:21:17:47 +0200] "GET /Labo_1/Controller?action=overview HTTP/1.1" 200 733
