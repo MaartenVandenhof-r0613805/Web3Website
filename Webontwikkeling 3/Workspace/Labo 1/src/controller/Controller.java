@@ -106,6 +106,8 @@ public class Controller extends HttpServlet {
 		case "removeProduct":
 			doel = removeProduct(request, response);
 			break;
+		case "login":
+			
 		default:
 			doel = "index.jsp";
 		}
@@ -386,5 +388,19 @@ public class Controller extends HttpServlet {
 		} else {
 			return "addProduct.jsp";
 		}
+	}
+	
+	private String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String email = request.getParameter("email");
+		
+		
+		for(Person person : this.databank.getPersons()) {
+			if(person.getEmail().equals(email)) {
+				String password = request.getParameter("password");
+				
+			}
+		}
+		
+		return productOverview(request, response);
 	}
 }

@@ -12,7 +12,6 @@ public class Person {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String passwordHashed;
 	private Role role;
 
 	
@@ -90,8 +89,8 @@ public class Person {
 			throw new DomainException("No password given");
 		}
 		System.out.println("voor hashed methode");
-		HashPassword(password);
-		this.password = this.passwordHashed;
+		
+		this.password = hashPassword(password);;
 	}
 
 	public String getFirstName() {
@@ -116,17 +115,29 @@ public class Person {
 		this.lastName = lastName;
 	}
 	
-	private void HashPassword(String password){
+	private String hashPassword(String password){
+		String passwordHashed = null;
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance("SHA-256");
 			byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-			this.passwordHashed = hashedBytes.toString();
 			System.out.println("password hashed");
+			passwordHashed = hashedBytes.toString();
+			return passwordHashed;
 		} catch (NoSuchAlgorithmException e) {
 			
 		}		
+		return passwordHashed;
+	}
+	
+	public boolean checkPassword(String password) {
+		boolean check = false;
 		
+		if(this.password.equals(hashPassword(password))) {
+			check = true;
+		}
+		
+		return check;
 	}
 	
 	private void setRole(String string) {

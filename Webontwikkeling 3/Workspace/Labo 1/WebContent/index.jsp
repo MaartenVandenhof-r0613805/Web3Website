@@ -26,12 +26,17 @@
 			<h2>Home</h2>
 
 		</header>
-		<main> Sed ut perspiciatis unde omnis iste natus error sit
-		voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
-		ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-		dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-		aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
-		qui ratione voluptatem sequi nesciunt. </main>
+		<main> 
+		<form method="post" action="Controller?action=login" novalidate="novalidate">
+    	<!-- novalidate in order to be able to run tests correctly -->
+        
+        <p><label for="email">Email</label><input type="email" id="email" name="email" required value=""></p>
+        <p><label for="password">Password</label><input type="password" id="password"  name="password"
+         required> </p>
+        <p><input type="submit" id="login" value="Login"></p>
+        
+    </form>
+		 </main>
 		<%@ include file="footer.jspf" %>
 	</div>
 </body>
