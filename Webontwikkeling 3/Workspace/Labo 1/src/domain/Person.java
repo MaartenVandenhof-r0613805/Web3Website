@@ -119,9 +119,8 @@ public class Person {
 		String passwordHashed = null;
 		MessageDigest digest;
 		try {
-			digest = MessageDigest.getInstance("SHA-256");
+			digest = MessageDigest.getInstance("SHA-512");
 			byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-			System.out.println("password hashed");
 			passwordHashed = hashedBytes.toString();
 			return passwordHashed;
 		} catch (NoSuchAlgorithmException e) {
@@ -132,7 +131,8 @@ public class Person {
 	
 	public boolean checkPassword(String password) {
 		boolean check = false;
-		
+		System.out.println(hashPassword(password));
+		System.out.println(hashPassword(password));
 		if(this.password.equals(hashPassword(password))) {
 			check = true;
 		}

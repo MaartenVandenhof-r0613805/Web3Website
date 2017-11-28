@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +25,13 @@
 				</ul>
 			</nav>
 			<h2>Home</h2>
-
+			<c:forEach var = "error" items = "${errors }">
+	<div class="alert-danger">
+		<ul>
+			<li>${error}</li>
+		</ul>
+	</div>
+	</c:forEach>
 		</header>
 		<main> 
 		<form method="post" action="Controller?action=login" novalidate="novalidate">

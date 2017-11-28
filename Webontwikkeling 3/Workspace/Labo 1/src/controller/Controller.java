@@ -107,7 +107,7 @@ public class Controller extends HttpServlet {
 			doel = removeProduct(request, response);
 			break;
 		case "login":
-			
+			doel = login(request, response);
 		default:
 			doel = "index.jsp";
 		}
@@ -391,16 +391,36 @@ public class Controller extends HttpServlet {
 	}
 	
 	private String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		ArrayList<String> errorLijst = new ArrayList<String>();
 		String email = request.getParameter("email");
+		Person persoon = new Person();
+		boolean correct = false;
+		
+		setEmail(persoon, request, errorLijst);
+		setPassword(persoon, request, errorLijst);
 		
 		
-		for(Person person : this.databank.getPersons()) {
-			if(person.getEmail().equals(email)) {
+		
+		for(Person databankPerson : this.databank.getPersons()) {
+			if(databankPerson.getEmail().equals(email)) {
 				String password = request.getParameter("password");
-				
+				System.out.println(databankPerson.getPassword());
+			
+				if(databankPerson.checkPassword(password)) {
+					correct = true;
+				} else {
+					errorLijst.add("Wrong password");
+				}
 			}
 		}
 		
-		return productOverview(request, response);
+		request.setAttribute("errors", errorLijst);
+		
+		if(correct) {
+			if(errorLijst.isEmpty() || errorLijst == null) {
+				return Overview(request, response);
+			}
+		}
+		return "index.jsp";
 	}
 }
