@@ -108,6 +108,7 @@ public class Controller extends HttpServlet {
 			break;
 		case "login":
 			doel = login(request, response);
+			break;
 		default:
 			doel = "index.jsp";
 		}
@@ -403,8 +404,9 @@ public class Controller extends HttpServlet {
 		
 		for(Person databankPerson : this.databank.getPersons()) {
 			if(databankPerson.getEmail().equals(email)) {
+				
 				String password = request.getParameter("password");
-				System.out.println(databankPerson.getPassword());
+				System.out.println("DatabankPassword " + databankPerson.getPassword());
 			
 				if(databankPerson.checkPassword(password)) {
 					correct = true;
@@ -418,6 +420,7 @@ public class Controller extends HttpServlet {
 		
 		if(correct) {
 			if(errorLijst.isEmpty() || errorLijst == null) {
+				System.out.println("FINALLY");
 				return Overview(request, response);
 			}
 		}

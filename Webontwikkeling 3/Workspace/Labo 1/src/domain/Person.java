@@ -1,5 +1,6 @@
 package domain;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +23,7 @@ public class Person {
 		setFirstName(firstName);
 		setLastName(lastName);
 		setRole(role);
-		System.out.println(getRole());
+		
 	}
 	public Person(String userid, String email, String password, String firstName, String lastName) {
 		setUserid(userid);
@@ -31,12 +32,10 @@ public class Person {
 		setFirstName(firstName);
 		setLastName(lastName);
 		setRole("customer");
-		System.out.println(getRole());
 	}
 	
 	public Person() {
 		setRole("customer");
-		System.out.println(getRole());
 	}
 
 	public String getUserid() {
@@ -48,7 +47,6 @@ public class Person {
 			System.out.println(" isEmpty ");
 			throw new DomainException("No userid given");
 		}
-		System.out.println("niet isEmpty");
 		this.userid = userid;
 	}
 
@@ -74,7 +72,7 @@ public class Person {
 	}
 	
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 	
 	public boolean isCorrectPassword(String password) {
@@ -88,7 +86,6 @@ public class Person {
 		if(password.isEmpty()){
 			throw new DomainException("No password given");
 		}
-		System.out.println("voor hashed methode");
 		
 		this.password = hashPassword(password);;
 	}
@@ -121,7 +118,8 @@ public class Person {
 		try {
 			digest = MessageDigest.getInstance("SHA-512");
 			byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-			passwordHashed = hashedBytes.toString();
+			BigInteger digestAsBigInteger = new BigInteger(1, hashedBytes);
+			passwordHashed = digestAsBigInteger.toString(16);
 			return passwordHashed;
 		} catch (NoSuchAlgorithmException e) {
 			
@@ -131,9 +129,9 @@ public class Person {
 	
 	public boolean checkPassword(String password) {
 		boolean check = false;
-		System.out.println(hashPassword(password));
-		System.out.println(hashPassword(password));
-		if(this.password.equals(hashPassword(password))) {
+		System.out.println("CheckedPassword " + hashPassword(password));
+		if(this.password.equals(hashPassword(hashPassword(password)))) {
+			
 			check = true;
 		}
 		
