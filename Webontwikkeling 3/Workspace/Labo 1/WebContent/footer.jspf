@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,8 @@
 		<footer> 
 		&copy; Webontwikkeling 3, UC Leuven-Limburg 
 			<form action="">
-				<input type="submit" value="Switch color">
+				<input type="submit" value="Switch color" name="switchColor">
+				<%Cookie cookie = new Cookie("", request.getParameter("")); %>
 			</form>
 		</footer>
 	
