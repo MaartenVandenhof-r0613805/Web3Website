@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 
 import db.DbException;
@@ -32,8 +32,14 @@ import domain.ShopService;
 public class Controller extends HttpServlet {
 	private ShopService databank = new ShopService();
 	private ProductSQLDatabase productDb = new ProductSQLDatabase();
-	
+	private String css = "css/yellow.css";
 	private static final long serialVersionUID = 1L;
+	String index;
+	String overview;
+	String products;
+	String addProduct;
+	String signUp;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -61,10 +67,26 @@ public class Controller extends HttpServlet {
 	protected void frontController(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String doel;
 		String action;
+		
+		
 		if (request.getParameter("action") == null || request.getParameter("action").isEmpty()) {
 			action = "index";
 		} else {
 			action = request.getParameter("action");
+		}
+		
+		boolean exists = false;
+		for(Cookie cookie : request.getCookies()) {
+			if(cookie.getName().equals("actual")) {
+				exists = true;
+				System.out.println("Boolean word op true gezet met value " +cookie.getValue());
+			}
+		}
+		
+		if(!exists) {
+			Cookie cookie = new Cookie("actual", "Controller");
+			response.addCookie(cookie);
+			System.out.println("Cookie with value Controller added");
 		}
 		
 		switch(action) {
@@ -72,6 +94,13 @@ public class Controller extends HttpServlet {
 			doel = Overview(request, response);
 			break;
 		case "index":
+			this.index = "actual";
+			this.overview = null;
+			this.products = null;
+			this.addProduct = null;
+			this.products = null;
+			this.signUp = null;
+
 			doel = "index.jsp";
 			break;
 		case "signUp":
@@ -109,9 +138,26 @@ public class Controller extends HttpServlet {
 		case "login":
 			doel = login(request, response);
 			break;
+		case "switchColor":
+			doel = switchColor(request, response);
+			break;
 		default:
+			this.index = "actual";
+			this.overview = null;
+			this.products = null;
+			this.addProduct = null;
+			this.products = null;
+			this.signUp = null;
+
 			doel = "index.jsp";
 		}
+		
+		request.setAttribute("cssStyle", css);
+		request.setAttribute("index", index);
+		request.setAttribute("overview", overview);
+		request.setAttribute("products", products);
+		request.setAttribute("addProductsPage", addProduct);
+		request.setAttribute("signUpPage", signUp);
 		
 		RequestDispatcher rd = request.getRequestDispatcher(doel);
 		rd.forward(request, response);
@@ -120,8 +166,18 @@ public class Controller extends HttpServlet {
 	private String Overview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 			request.setAttribute("Databank", this.databank.getPersons());
-		
-			
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				cookie.setValue("overview");
+				this.index = null;
+				this.overview = "actual";
+				this.products = null;
+				this.addProduct = null;
+				this.products = null;
+				this.signUp = null;
+			}
+		}
 		
 		return "personoverview.jsp";
 	}
@@ -148,9 +204,33 @@ public class Controller extends HttpServlet {
 		
 		if(errorLijst == null || errorLijst.isEmpty()) {
 			addPerson(persoon, request, errorLijst);
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					cookie.setValue("Controller");
+					this.index = "actual";
+					this.overview = null;
+					this.products = null;
+					this.addProduct = null;
+					this.products = null;
+					this.signUp = null;
+				}
+			}
 			return "index.jsp";
 			
 		} else {
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					cookie.setValue("signUp");
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = null;
+					this.products = null;
+					this.signUp = "actual";
+				}
+			}
 			return "signUp.jsp";
 		}
 		
@@ -174,6 +254,19 @@ public class Controller extends HttpServlet {
 		if(errorLijst == null || errorLijst.isEmpty()) {
 			return Overview(request, response);
 		} else {
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					cookie.setValue("signUp");
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = null;
+					this.products = null;
+					this.signUp = "actual";
+				}
+			}
+
 			return "signUp.jsp";
 		}
 		
@@ -237,11 +330,37 @@ public class Controller extends HttpServlet {
 		String id = request.getParameter("id");
 		Person persoon = databank.getPerson(id);
 		request.setAttribute("person", persoon);
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				cookie.setValue("signUp");
+				this.index = null;
+				this.overview = null;
+				this.products = null;
+				this.addProduct = null;
+				this.products = null;
+				this.signUp = "actual";
+			}
+		}
+
 		return "update.jsp";
 	}
 	
 	private String productOverview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("ProductDatabank", productDb.getAll());
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				cookie.setValue("products");
+				this.index = null;
+				this.overview = null;
+				this.products = "actual";
+				this.addProduct = null;
+				this.products = null;
+				this.signUp = null;
+			}
+		}
+		
 		return "productoverview.jsp";
 	}
 	
@@ -272,6 +391,20 @@ public class Controller extends HttpServlet {
 			addProductToDatabse(product, request, errorLijst);
 			return productOverview(request, response);
 		} else {
+			
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					cookie.setValue("addProduct");
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = "actual";
+					this.products = null;
+					this.signUp = null;
+				}
+			}
+			
 			return "addProduct.jsp";
 		}
 	}
@@ -346,6 +479,18 @@ public class Controller extends HttpServlet {
 		
 		Product product = this.productDb.get(id);
 		request.setAttribute("product", product);
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				cookie.setValue("addProduct");
+				this.index = null;
+				this.overview = null;
+				this.products = null;
+				this.addProduct = "actual";
+				this.products = null;
+				this.signUp = null;
+			}
+		}
 		return "updateProduct.jsp";
 	}
 	
@@ -387,6 +532,18 @@ public class Controller extends HttpServlet {
 		if(errorLijst == null || errorLijst.isEmpty()) {
 			return productOverview(request, response);
 		} else {
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					cookie.setValue("addProduct");
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = "actual";
+					this.products = null;
+					this.signUp = null;
+				}
+			}
 			return "addProduct.jsp";
 		}
 	}
@@ -424,6 +581,78 @@ public class Controller extends HttpServlet {
 				return Overview(request, response);
 			}
 		}
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				cookie.setValue("Controller");
+				this.index = "actual";
+				this.overview = null;
+				this.products = null;
+				this.addProduct = null;
+				this.products = null;
+				this.signUp = null;
+			}
+		}
 		return "index.jsp";
+	}
+	
+	private String switchColor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		Cookie[] cookies = request.getCookies();
+		boolean foundCookie = false;
+		String actual = "Controller";
+		String theCookie = "cookie";
+		
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("color")){
+				foundCookie = true;
+				
+				if(cookie.getValue().toString().equals("red")) {
+					this.css = "css/yellow.css";
+					cookie.setValue("yellow");
+					System.out.println("zit in red");
+				} else {
+					this.css = "css/red.css";
+					cookie.setValue("red");
+					System.out.println("zit in yellow");
+
+				}
+				
+				theCookie = cookie.getValue();
+			} 
+			
+			if (cookie.getName().equals("actual")){
+				actual = cookie.getValue();
+			} 
+		}
+		
+		System.out.println(theCookie);
+		
+		if(!foundCookie) {
+			Cookie newCookie = new Cookie("color", "red");
+			this.css = "css/red.css";
+			response.addCookie(newCookie);
+		}
+		System.out.println(actual);
+		 if (actual.equals("overview")) {
+			return Overview(request, response);
+		} if(actual.equals("products")){
+			return productOverview(request, response);
+		} if(actual.equals("addProduct")){
+			return addProduct(request, response);
+		} if(actual.equals("signUp")){
+			return voegToe(request, response);
+		}
+		
+		
+		this.index = "actual";
+		this.overview = null;
+		this.products = null;
+		this.addProduct = null;
+		this.products = null;
+		this.signUp = null;
+		
+		return "index.jsp";
+				
+		
 	}
 }

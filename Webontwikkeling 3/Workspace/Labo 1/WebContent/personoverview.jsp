@@ -7,20 +7,15 @@
 <meta charset="UTF-8">
 <title>Overview</title>
 <link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="${cssStyle }">
+
 </head>
 <body>
 <div id="container">
 <header>
 <h1><span>Web shop</span></h1>
-<nav>
-<ul>
-<li><a href="Controller">Home</a></li>
-<li id="actual"><a href="Controller?action=overview">Overview</a></li>
-<li><a href="Controller?action=productOverview">Products</a></li>
-<li ><a href="Controller?action=addProduct">Add Product</a></li>
-<li><a href="Controller?action=signUp">Sign up</a></li>
-</ul>
-</nav>
+<%@ include file="header.jspf" %>
+
 <h2>
 User Overview
 </h2>

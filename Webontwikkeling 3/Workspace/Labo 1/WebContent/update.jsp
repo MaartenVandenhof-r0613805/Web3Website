@@ -13,15 +13,8 @@
 <div id="container">
 <header>
 <h1><span>Web shop</span></h1>
-<nav>
-<ul>
-<li><a href="Controller">Home</a></li>
-<li><a href="Controller?action=overview">Overview</a></li>
-<li><a href="Controller?action=productOverview">Products</a></li>
-<li ><a href="Controller?action=addProduct">Add Product</a></li>
-<li ><a href="Controller?action=signUp">Sign up</a></li>
-</ul>
-</nav>
+<%@ include file="header.jspf" %>
+
 <h2>
 Sign Up
 </h2>
