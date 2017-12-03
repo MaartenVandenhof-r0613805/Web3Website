@@ -39,6 +39,8 @@ public class Controller extends HttpServlet {
 	String products;
 	String addProduct;
 	String signUp;
+	String page = "Controller";
+	String color = "yellow";
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -75,19 +77,9 @@ public class Controller extends HttpServlet {
 			action = request.getParameter("action");
 		}
 		
-		boolean exists = false;
-		for(Cookie cookie : request.getCookies()) {
-			if(cookie.getName().equals("actual")) {
-				exists = true;
-				System.out.println("Boolean word op true gezet met value " +cookie.getValue());
-			}
-		}
 		
-		if(!exists) {
-			Cookie cookie = new Cookie("actual", "Controller");
-			response.addCookie(cookie);
-			System.out.println("Cookie with value Controller added");
-		}
+		
+		
 		
 		switch(action) {
 		case "overview":
@@ -100,10 +92,22 @@ public class Controller extends HttpServlet {
 			this.addProduct = null;
 			this.products = null;
 			this.signUp = null;
-
+			this.page = "Controller";
 			doel = "index.jsp";
 			break;
 		case "signUp":
+			Cookie[] cookies = request.getCookies();
+			for(Cookie cookie : cookies) {
+				if (cookie.getName().equals("actual")) {
+					this.page = "signUp";
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = null;
+					this.products = null;
+					this.signUp = "actual";
+				}
+			}
 			doel = "signUp.jsp";
 			break;
 		case "voegToe":
@@ -121,6 +125,19 @@ public class Controller extends HttpServlet {
 			doel = productOverview(request, response);
 			break;
 		case "addProduct":
+			Cookie[] cookiesP = request.getCookies();
+			for(Cookie cookie : cookiesP) {
+				if (cookie.getName().equals("actual")) {
+					this.page = "addProduct";
+					this.index = null;
+					this.overview = null;
+					this.products = null;
+					this.addProduct = "actual";
+					this.products = null;
+					this.signUp = null;
+				}
+			}
+			
 			doel = "addProduct.jsp";
 			break;
 		case "addProductToDB":
@@ -142,6 +159,7 @@ public class Controller extends HttpServlet {
 			doel = switchColor(request, response);
 			break;
 		default:
+			this.page = "Controller";
 			this.index = "actual";
 			this.overview = null;
 			this.products = null;
@@ -152,11 +170,17 @@ public class Controller extends HttpServlet {
 			doel = "index.jsp";
 		}
 		
+		Cookie cookie = new Cookie("actual", this.page);
+		response.addCookie(cookie);
+		
+		Cookie cookie2 = new Cookie("color", this.color);
+		response.addCookie(cookie2);
+		
 		request.setAttribute("cssStyle", css);
 		request.setAttribute("index", index);
 		request.setAttribute("overview", overview);
 		request.setAttribute("products", products);
-		request.setAttribute("addProductsPage", addProduct);
+		request.setAttribute("addProductPage", addProduct);
 		request.setAttribute("signUpPage", signUp);
 		
 		RequestDispatcher rd = request.getRequestDispatcher(doel);
@@ -169,7 +193,7 @@ public class Controller extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
-				cookie.setValue("overview");
+				this.page = "overview";
 				this.index = null;
 				this.overview = "actual";
 				this.products = null;
@@ -207,7 +231,7 @@ public class Controller extends HttpServlet {
 			Cookie[] cookies = request.getCookies();
 			for(Cookie cookie : cookies) {
 				if (cookie.getName().equals("actual")) {
-					cookie.setValue("Controller");
+					this.page = "Controller";
 					this.index = "actual";
 					this.overview = null;
 					this.products = null;
@@ -222,7 +246,7 @@ public class Controller extends HttpServlet {
 			Cookie[] cookies = request.getCookies();
 			for(Cookie cookie : cookies) {
 				if (cookie.getName().equals("actual")) {
-					cookie.setValue("signUp");
+					this.page = "signUp";
 					this.index = null;
 					this.overview = null;
 					this.products = null;
@@ -257,7 +281,7 @@ public class Controller extends HttpServlet {
 			Cookie[] cookies = request.getCookies();
 			for(Cookie cookie : cookies) {
 				if (cookie.getName().equals("actual")) {
-					cookie.setValue("signUp");
+					this.page = "signUp";
 					this.index = null;
 					this.overview = null;
 					this.products = null;
@@ -333,7 +357,7 @@ public class Controller extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
-				cookie.setValue("signUp");
+				this.page = "signUp";
 				this.index = null;
 				this.overview = null;
 				this.products = null;
@@ -351,12 +375,11 @@ public class Controller extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
-				cookie.setValue("products");
+				this.page = "products";
 				this.index = null;
 				this.overview = null;
 				this.products = "actual";
 				this.addProduct = null;
-				this.products = null;
 				this.signUp = null;
 			}
 		}
@@ -383,7 +406,20 @@ public class Controller extends HttpServlet {
 		setRating(product, request, errorLijst);
 		
 		
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals("actual")) {
+				this.page = "addProduct";
+				this.index = null;
+				this.overview = null;
+				this.products = null;
+				this.addProduct = "actual";
+				this.products = null;
+				this.signUp = null;
+			}
+		}
 		
+
 		
 		request.setAttribute("producterrors", errorLijst);
 		
@@ -391,20 +427,6 @@ public class Controller extends HttpServlet {
 			addProductToDatabse(product, request, errorLijst);
 			return productOverview(request, response);
 		} else {
-			
-			Cookie[] cookies = request.getCookies();
-			for(Cookie cookie : cookies) {
-				if (cookie.getName().equals("actual")) {
-					cookie.setValue("addProduct");
-					this.index = null;
-					this.overview = null;
-					this.products = null;
-					this.addProduct = "actual";
-					this.products = null;
-					this.signUp = null;
-				}
-			}
-			
 			return "addProduct.jsp";
 		}
 	}
@@ -482,7 +504,7 @@ public class Controller extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
-				cookie.setValue("addProduct");
+				this.page = "addProduct";
 				this.index = null;
 				this.overview = null;
 				this.products = null;
@@ -535,7 +557,7 @@ public class Controller extends HttpServlet {
 			Cookie[] cookies = request.getCookies();
 			for(Cookie cookie : cookies) {
 				if (cookie.getName().equals("actual")) {
-					cookie.setValue("addProduct");
+					this.page = "addProduct";
 					this.index = null;
 					this.overview = null;
 					this.products = null;
@@ -584,7 +606,7 @@ public class Controller extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
-				cookie.setValue("Controller");
+				this.page = "Controller";
 				this.index = "actual";
 				this.overview = null;
 				this.products = null;
@@ -608,11 +630,11 @@ public class Controller extends HttpServlet {
 				
 				if(cookie.getValue().toString().equals("red")) {
 					this.css = "css/yellow.css";
-					cookie.setValue("yellow");
+					this.color = "yellow";
 					System.out.println("zit in red");
 				} else {
 					this.css = "css/red.css";
-					cookie.setValue("red");
+					this.color = "red";
 					System.out.println("zit in yellow");
 
 				}
@@ -638,9 +660,9 @@ public class Controller extends HttpServlet {
 		} if(actual.equals("products")){
 			return productOverview(request, response);
 		} if(actual.equals("addProduct")){
-			return addProduct(request, response);
+			return "addProduct.jsp";
 		} if(actual.equals("signUp")){
-			return voegToe(request, response);
+			return "signUp.jsp";
 		}
 		
 		
