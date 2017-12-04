@@ -176,6 +176,10 @@ public class Controller extends HttpServlet {
 		Cookie cookie2 = new Cookie("color", this.color);
 		response.addCookie(cookie2);
 		
+		if(request.getSession().getAttribute("user") != null) {
+			request.setAttribute("user", request.getSession().getAttribute("user"));
+		} 
+		
 		request.setAttribute("cssStyle", css);
 		request.setAttribute("index", index);
 		request.setAttribute("overview", overview);
@@ -587,6 +591,7 @@ public class Controller extends HttpServlet {
 			if(!correct) {
 				throw new DomainException("Incorrect password");
 			} else {
+				request.getSession().setAttribute("user", user);
 				loggedIn = true;
 			}
 			
@@ -611,7 +616,7 @@ public class Controller extends HttpServlet {
 		}
 		
 		if(loggedIn) {
-			return Overview(request, response);
+			return "loggedIn.jsp";
 		} else {
 			return doel;
 		}
