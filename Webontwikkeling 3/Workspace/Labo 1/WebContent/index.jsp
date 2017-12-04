@@ -32,7 +32,7 @@
 		<form method="post" action="Controller?action=login" novalidate="novalidate">
     	<!-- novalidate in order to be able to run tests correctly -->
         
-        <p><label for="email">Email</label><input type="email" id="email" name="email" required value=""></p>
+        <p><label for="id">UserId</label><input type="test" id="id" name="id" required ></p>
         <p><label for="password">Password</label><input type="password" id="password"  name="password"
          required> </p>
         <p><input type="submit" id="login" value="Login"></p>

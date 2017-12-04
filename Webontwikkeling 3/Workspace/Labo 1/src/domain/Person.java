@@ -44,7 +44,6 @@ public class Person {
 
 	public void setUserid(String userid) {
 		if(userid.isEmpty() || userid == null || userid.trim().isEmpty()){
-			System.out.println(" isEmpty ");
 			throw new DomainException("No userid given");
 		}
 		this.userid = userid;
@@ -129,7 +128,9 @@ public class Person {
 	
 	public boolean checkPassword(String password) {
 		boolean check = false;
-		System.out.println("CheckedPassword " + hashPassword(password));
+		
+		if(password == null || password.trim().isEmpty()) throw new DomainException("Fill in a password");
+		
 		if(this.password.equals(hashPassword(hashPassword(password)))) {
 			
 			check = true;

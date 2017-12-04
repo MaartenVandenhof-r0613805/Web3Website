@@ -300,7 +300,7 @@ public class Controller extends HttpServlet {
 		String ID = request.getParameter("userid");
 		try {
 			persoon.setUserid(ID);
-		} catch(DomainException e) {
+		} catch(Exception e) {
 			errorLijst.add(e.getMessage());
 		}
 	}
@@ -572,37 +572,31 @@ public class Controller extends HttpServlet {
 	
 	private String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		ArrayList<String> errorLijst = new ArrayList<String>();
-		String email = request.getParameter("email");
-		Person persoon = new Person();
+		String id = request.getParameter("id");
 		boolean correct = false;
+		boolean loggedIn = false;
+		String doel = "index.jsp";
 		
-		setEmail(persoon, request, errorLijst);
-		setPassword(persoon, request, errorLijst);
-		
-		
-		
-		for(Person databankPerson : this.databank.getPersons()) {
-			if(databankPerson.getEmail().equals(email)) {
-				
-				String password = request.getParameter("password");
-				System.out.println("DatabankPassword " + databankPerson.getPassword());
+		try {
 			
-				if(databankPerson.checkPassword(password)) {
-					correct = true;
-				} else {
-					errorLijst.add("Wrong password");
-				}
+			Person user = this.databank.getPerson(id);
+			String password = request.getParameter("password");
+			
+			correct = user.checkPassword(password);
+			
+			if(!correct) {
+				throw new DomainException("Incorrect password");
+			} else {
+				loggedIn = true;
 			}
+			
+		} catch(DomainException e) {
+			errorLijst.add(e.getMessage());
 		}
+		
 		
 		request.setAttribute("errors", errorLijst);
 		
-		if(correct) {
-			if(errorLijst.isEmpty() || errorLijst == null) {
-				System.out.println("FINALLY");
-				return Overview(request, response);
-			}
-		}
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie : cookies) {
 			if (cookie.getName().equals("actual")) {
@@ -615,8 +609,15 @@ public class Controller extends HttpServlet {
 				this.signUp = null;
 			}
 		}
-		return "index.jsp";
+		
+		if(loggedIn) {
+			return Overview(request, response);
+		} else {
+			return doel;
+		}
 	}
+	
+	
 	
 	private String switchColor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Cookie[] cookies = request.getCookies();

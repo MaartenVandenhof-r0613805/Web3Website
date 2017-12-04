@@ -1,4 +1,5 @@
 package db;
+import domain.DomainException;
 import domain.Person;
 import domain.Role;
 
@@ -47,7 +48,6 @@ public class PersonDbDatabase {
 				ResultSet result = statement.executeQuery("SELECT * FROM r0613805_test2.person");
 				
 				while(result.next()) {
-					System.out.println("test2");
 					String id = result.getString("user_id");
 					String firstName = result.getString("firstName");
 					String lastName = result.getString("lastName");
@@ -93,6 +93,10 @@ public class PersonDbDatabase {
 		public Person get(String id) {
 			Person person = null;
 			
+			if(id == null || id.trim().isEmpty()) {
+				throw new DomainException("Fill in an id");
+			}
+			
 			try(Connection connection = DriverManager.getConnection(url, properties)){
 				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery("SELECT * FROM r0613805_test2.person WHERE user_id= '" + id + "'");
@@ -104,7 +108,7 @@ public class PersonDbDatabase {
 					String email = result.getString("email");
 					String password = result.getString("password");
 					String role = result.getString("role");
-					System.out.println(email);
+					
 					person = new Person(userid, email, password,firstName, lastName, role);
 				}
 				

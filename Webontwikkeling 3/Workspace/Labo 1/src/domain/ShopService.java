@@ -12,7 +12,9 @@ public class ShopService {
 	}
 	
 	public Person getPerson(String personId) {
-		return getPersonDb().get(personId);
+		Person person = getPersonDb().get(personId);
+		if (person == null) throw new DomainException("Invalid id");
+		return person;
 	}
 
 	public List<Person> getPersons() {
